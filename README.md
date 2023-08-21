@@ -16,14 +16,15 @@ will need to live in a folder called `monitors` (this can be overridden) contain
 
 ```
 steps:
-  steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-python@v4
       with:
         python-version: '3.10'
+
     - name: Install montecarlo
       shell: bash
       run: pip install -U montecarlodata
+
     - name: Monte Carlo Monitors Deploy
       uses: actions/montecarlo-monitors-deploy@v1
       with:
