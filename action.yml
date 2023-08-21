@@ -1,0 +1,40 @@
+name: "Monte Carlo Apply Monitors"
+description: "Apply montecarlo monitors"
+inputs:
+  MCD_DEFAULT_API_ID:
+    description: '[Secret] MonteCarlo token ID'
+    required: true
+  MCD_DEFAULT_API_TOKEN:
+    description: '[Secret] MonteCarlo API token'
+    required: true
+  MONITORS_FOLDER:
+    description: 'Top level folder containing monitors, within which is folders for each namespace'
+    default: 'monitors'
+  MAIN_BRANCH:
+    description: 'Branch on which to apply monitors'
+    default: 'main'
+
+runs:
+  using: "composite"
+  steps:
+    - name: Montecarlo configure
+      shell: bash
+      env:
+        MCD_DEFAULT_API_ID: ${{ inputs.MCD_DEFAULT_API_ID }}
+        MCD_DEFAULT_API_TOKEN: ${{ inputs.MCD_DEFAULT_API_TOKEN }}
+      run: montecarlo configure --mcd-id $MCD_DEFAULT_API_ID --mcd-token $MCD_DEFAULT_API_TOKEN --aws-region '' --aws-profile ''
+
+    - name: Apply monitors in ${MONITORS_FOLDER}/ directory
+      shell: bash
+      env:
+        MONITORS_FOLDER: ${{ inputs.MONITORS_FOLDER }}
+        MAIN_BRANCH: ${{ inputs.MAIN_BRANCH }}
+      run: |
+        for dir in $MONITORS_FOLDER/* ; do
+        if [${{ (github.ref == 'refs/heads/$MAIN_BRANCH') && (github.event.pull_request.merged == true ) }} ]
+        then
+        echo "Applying monitors in $dir" && pushd ./$dir && montecarlo monitors apply --auto-yes && popd
+        else
+        echo "Dry run in $dir" && pushd ./$dir && montecarlo monitors apply --dry-run && popd
+        fi
+        done
