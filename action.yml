@@ -31,7 +31,7 @@ runs:
         MAIN_BRANCH: ${{ inputs.MAIN_BRANCH }}
       run: |
         for dir in $MONITORS_FOLDER/* ; do
-        if [${{ (github.ref == "refs/heads/$MAIN_BRANCH") && (github.event.pull_request.merged == true ) }} ]
+        if [ ${{ (github.ref) }} -eq "refs/heads/$MAIN_BRANCH" -a (github.event.pull_request.merged -eq true ) }} ]
         then
         echo "Applying monitors in $dir" && pushd ./$dir && montecarlo monitors apply --auto-yes && popd
         else
