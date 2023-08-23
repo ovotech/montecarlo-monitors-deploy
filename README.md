@@ -11,8 +11,8 @@ This action provides the following functionality for GitHub Actions users:
 
 You will first need to generate an API ID and API key, and store these as secrets in your repo.
 
-To use the action as is your main branch will need to be called `main` (this can be overridden), and your YAML monitors
-will need to live in a folder called `monitors` (this can be overridden) containing sub-folders by namespace. 
+To use the action as is your YAML monitors will need to live in a folder called `monitors` (this can be overridden) 
+containing sub-folders by namespace. 
 
 ```
 steps:       
@@ -32,3 +32,4 @@ steps:
         MCD_DEFAULT_API_TOKEN: ${{secrets.MCD_DEFAULT_API_TOKEN}}     
         DRY_RUN: 'false'  
 ```
+
