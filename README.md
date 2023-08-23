@@ -15,9 +15,7 @@ To use the action as is your main branch will need to be called `main` (this can
 will need to live in a folder called `monitors` (this can be overridden) containing sub-folders by namespace. 
 
 ```
-steps:
-    - uses: actions/checkout@v3
-        
+steps:       
     - name: MonteCarlo Dry Run Monitors
       if: github.ref != 'refs/heads/main'
       uses: actions/montecarlo-monitors-deploy@v1
