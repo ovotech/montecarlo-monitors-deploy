@@ -10,31 +10,30 @@ inputs:
   MONITORS_FOLDER:
     description: 'Top level folder containing monitors, within which is folders for each namespace'
     default: 'monitors'
-  MAIN_BRANCH:
-    description: 'Branch on which to apply monitors'
-    default: 'main'
+  DRY_RUN:
+    description: 'Whether to run as dry run or deploy the monitors (normally on main branch only)'
 
 runs:
   using: "composite"
   steps:
-    - name: Montecarlo configure
+    - name: MonteCarlo configure
       shell: bash
       env:
         MCD_DEFAULT_API_ID: ${{ inputs.MCD_DEFAULT_API_ID }}
         MCD_DEFAULT_API_TOKEN: ${{ inputs.MCD_DEFAULT_API_TOKEN }}
       run: montecarlo configure --mcd-id $MCD_DEFAULT_API_ID --mcd-token $MCD_DEFAULT_API_TOKEN --aws-region '' --aws-profile ''
 
-    - name: Apply monitors in ${MONITORS_FOLDER}/ directory
+    - name: MonteCarlo deploy
       shell: bash
       env:
         MONITORS_FOLDER: ${{ inputs.MONITORS_FOLDER }}
-        MAIN_BRANCH: ${{ inputs.MAIN_BRANCH }}
+        DRY_RUN: ${{ inputs.DRY_RUN }}
       run: |
         for dir in $MONITORS_FOLDER/* ; do
-        if [ ${{ (github.ref) }} -eq "refs/heads/$MAIN_BRANCH" -a (github.event.pull_request.merged -eq true ) }} ]
-        then
-        echo "Applying monitors in $dir" && pushd ./$dir && montecarlo monitors apply --auto-yes && popd
-        else
-        echo "Dry run in $dir" && pushd ./$dir && montecarlo monitors apply --dry-run && popd
-        fi
+          if $DRY_RUN
+          then
+            echo "Dry run monitors in $dir" && pushd ./$dir && montecarlo monitors apply --dry-run && popd
+          else
+            echo "Applying monitors in $dir" && pushd ./$dir && montecarlo monitors apply --auto-yes && popd
+          fi
         done
