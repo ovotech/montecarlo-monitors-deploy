@@ -11,7 +11,8 @@ inputs:
     description: 'Top level folder containing monitors, within which is folders for each namespace'
     default: 'monitors'
   DRY_RUN:
-    description: 'Whether to run as dry run or deploy the monitors (normally on main branch only)'
+    description: '(true / false) Whether to run as dry run or deploy the monitors (normally on main branch only)'
+    default: 'false'
 
 runs:
   using: "composite"
@@ -23,7 +24,7 @@ runs:
 
     - name: MonteCarlo install
       shell: bash
-      run: pip install -U montecarlodata
+      run: pip install -U -q montecarlodata
 
     - name: MonteCarlo configure
       shell: bash
@@ -39,10 +40,19 @@ runs:
         DRY_RUN: ${{ inputs.DRY_RUN }}
       run: |
         for dir in $MONITORS_FOLDER/* ; do
-          if $DRY_RUN
-          then
-            echo "Dry run monitors in $dir" && pushd ./$dir && montecarlo monitors apply --dry-run && popd
-          else
-            echo "Applying monitors in $dir" && pushd ./$dir && montecarlo monitors apply --auto-yes && popd
-          fi
-        done
+        if $DRY_RUN
+        then
+          echo "Dry run of monitors in $dir"
+          pushd ./$dir
+          montecarlo monitors apply --dry-run
+          popd
+        else
+          echo "Applying monitors in $dir"
+          pushd ./$dir
+          montecarlo monitors apply --auto-yes
+          popd
+        fi
+        done || {
+          echo "Error applying monitors in $dir"
+          exit 1
+        }
