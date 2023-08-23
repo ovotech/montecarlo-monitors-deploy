@@ -16,6 +16,14 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: MonteCarlo install
+      shell: bash
+      run: pip install -U montecarlodata
+
     - name: MonteCarlo configure
       shell: bash
       env:
