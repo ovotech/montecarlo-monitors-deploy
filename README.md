@@ -12,13 +12,14 @@ This action provides the following functionality for GitHub Actions users:
 You will first need to generate an API ID and API key, and store these as secrets in your repo.
 
 To use the action as is your YAML monitors will need to live in a folder called `monitors` (this can be overridden) 
-containing sub-folders by namespace. 
+containing sub-folders by namespace.
+
 
 ```
 steps:       
     - name: MonteCarlo Dry Run Monitors
       if: github.ref != 'refs/heads/main'
-      uses: actions/montecarlo-monitors-deploy@v1
+      uses: ovotech/montecarlo-monitors-deploy@v2
       with:
         MCD_DEFAULT_API_ID: ${{secrets.MCD_DEFAULT_API_ID}}
         MCD_DEFAULT_API_TOKEN: ${{secrets.MCD_DEFAULT_API_TOKEN}}     
@@ -26,7 +27,7 @@ steps:
        
     - name: MonteCarlo Apply Monitors
       if: github.ref == 'refs/heads/main'
-      uses: actions/montecarlo-monitors-deploy@v1
+      uses: ovotech/montecarlo-monitors-deploy@v2
       with:
         MCD_DEFAULT_API_ID: ${{secrets.MCD_DEFAULT_API_ID}}
         MCD_DEFAULT_API_TOKEN: ${{secrets.MCD_DEFAULT_API_TOKEN}}     
