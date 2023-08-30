@@ -19,7 +19,7 @@ containing sub-folders by namespace.
 steps:       
     - name: MonteCarlo Dry Run Monitors
       if: github.ref != 'refs/heads/main'
-      uses: ovotech/montecarlo-monitors-deploy@v2
+      uses: ovotech/montecarlo-monitors-deploy@v4
       with:
         MCD_DEFAULT_API_ID: ${{secrets.MCD_DEFAULT_API_ID}}
         MCD_DEFAULT_API_TOKEN: ${{secrets.MCD_DEFAULT_API_TOKEN}}     
@@ -27,7 +27,7 @@ steps:
        
     - name: MonteCarlo Apply Monitors
       if: github.ref == 'refs/heads/main'
-      uses: ovotech/montecarlo-monitors-deploy@v2
+      uses: ovotech/montecarlo-monitors-deploy@v4
       with:
         MCD_DEFAULT_API_ID: ${{secrets.MCD_DEFAULT_API_ID}}
         MCD_DEFAULT_API_TOKEN: ${{secrets.MCD_DEFAULT_API_TOKEN}}     
