@@ -1,5 +1,8 @@
 name: "Monte Carlo Apply Monitors"
 description: "Apply montecarlo monitors"
+branding:
+  icon: 'arrow-up-circle'
+  color: 'green'
 inputs:
   MCD_DEFAULT_API_ID:
     description: '[Secret] MonteCarlo token ID'
