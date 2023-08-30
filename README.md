@@ -2,8 +2,8 @@
 
 This action provides the following functionality for GitHub Actions users:
 - Connect to Monte Carlo
-- Performs a dry run of monitors on feature branches
-- Deploys monitors when merged to main branch
+- Performs a dry run of monitors on feature branches (optional)
+- Deploys monitors to Monte Carlo (deploys by default, but suggested to only deploy on merge to main)
 
 #### [Monte Carlo Monitors as code docs](https://docs.getmontecarlo.com/docs/monitors-as-code)
 
