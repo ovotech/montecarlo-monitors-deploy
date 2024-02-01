@@ -13,7 +13,7 @@ inputs:
   USE_CONFIG_YML:
     description: 'Use options like include_file_patterns in montecarlo.yml to drive dry-run/apply'
     required: false
-    default: 'false'
+    default: false
   MONITORS_FOLDER:
     description: 'Top level folder containing monitors, within which is folders for each namespace'
     default: 'monitors'
