@@ -19,7 +19,7 @@ inputs:
     default: 'monitors'
   DRY_RUN:
     description: '(true / false) Whether to run as dry run or deploy the monitors (normally on main branch only)'
-    default: 'false'
+    default: false
 
 runs:
   using: "composite"
