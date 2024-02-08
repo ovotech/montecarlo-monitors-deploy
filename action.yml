@@ -38,7 +38,7 @@ runs:
       env:
         MCD_DEFAULT_API_ID: ${{ inputs.MCD_DEFAULT_API_ID }}
         MCD_DEFAULT_API_TOKEN: ${{ inputs.MCD_DEFAULT_API_TOKEN }}
-      run: montecarlo configure --mcd-id $MCD_DEFAULT_API_ID --mcd-token $MCD_DEFAULT_API_TOKEN --aws-region '' --aws-profile ''
+      run: montecarlo configure --mcd-id $MCD_DEFAULT_API_ID --mcd-token $MCD_DEFAULT_API_TOKEN
 
     - name: MonteCarlo deploy
       shell: bash
