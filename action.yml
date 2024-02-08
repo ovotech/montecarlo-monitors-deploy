@@ -10,12 +10,16 @@ inputs:
   MCD_DEFAULT_API_TOKEN:
     description: '[Secret] MonteCarlo API token'
     required: true
+  USE_CONFIG_YML:
+    description: 'Use options like include_file_patterns in montecarlo.yml to drive dry-run/apply'
+    required: false
+    default: false
   MONITORS_FOLDER:
     description: 'Top level folder containing monitors, within which is folders for each namespace'
     default: 'monitors'
   DRY_RUN:
     description: '(true / false) Whether to run as dry run or deploy the monitors (normally on main branch only)'
-    default: 'false'
+    default: false
 
 runs:
   using: "composite"
@@ -34,7 +38,7 @@ runs:
       env:
         MCD_DEFAULT_API_ID: ${{ inputs.MCD_DEFAULT_API_ID }}
         MCD_DEFAULT_API_TOKEN: ${{ inputs.MCD_DEFAULT_API_TOKEN }}
-      run: montecarlo configure --mcd-id $MCD_DEFAULT_API_ID --mcd-token $MCD_DEFAULT_API_TOKEN --aws-region '' --aws-profile ''
+      run: montecarlo configure --mcd-id $MCD_DEFAULT_API_ID --mcd-token $MCD_DEFAULT_API_TOKEN
 
     - name: MonteCarlo deploy
       shell: bash
@@ -42,20 +46,24 @@ runs:
         MONITORS_FOLDER: ${{ inputs.MONITORS_FOLDER }}
         DRY_RUN: ${{ inputs.DRY_RUN }}
       run: |
-        for dir in $MONITORS_FOLDER/* ; do
-        if $DRY_RUN
-        then
-          echo "Dry run of monitors in $dir"
-          pushd ./$dir
-          montecarlo monitors apply --dry-run
-          popd
-        else
+        FLAG="--dry-run"
+        if [ "$DRY_RUN" = false ]; then
+          FLAG="--auto-yes"
           echo "Applying monitors in $dir"
-          pushd ./$dir
-          montecarlo monitors apply --auto-yes
-          popd
+        else
+          echo "Dry run of monitors in $dir"
         fi
-        done || {
-          echo "Error applying monitors in $dir"
-          exit 1
-        }
+        
+        if [ "$USE_CONFIG_YML" = true ]; then
+          montecarlo monitors apply $FLAG
+        else
+          for dir in $MONITORS_FOLDER/* ; do
+            pushd ./$dir
+            montecarlo monitors apply $FLAG
+            popd
+          done || {
+            echo "Error applying monitors in $dir"
+            exit 1
+          }
+        fi
+  
